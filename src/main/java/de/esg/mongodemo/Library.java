@@ -45,32 +45,31 @@ public class Library
 		Optional.of(this.mongoClient).ifPresent(client -> client.close());
 	}
 
-	public MongoClient getClient()
+	public void createProject(final Project project)
 	{
-		return this.mongoClient;
-	}
-
-	public Project createProject()
-	{
-		this.connectToServer();
-
 		final MongoDatabase database = this.mongoClient.getDatabase("projectDb");
 		final MongoCollection<Project> collection = database.getCollection("projects", Project.class);
 
-		final Project project = new Project();
-		project.setName("Demo-Projekt");
-		project.setKey("PROJ");
-		final Version v1 = new Version(1, "neu", "Initialversion");
-		project.setVersion(v1);
-
 		collection.insertOne(project);
 
-		final Project fromDb = collection.find().first();
+	}
 
-		this.disconnectFromServer();
+	public Project getFirstProject()
+	{
+		final MongoDatabase database = this.mongoClient.getDatabase("projectDb");
+		final MongoCollection<Project> collection = database.getCollection("projects", Project.class);
 
-		return fromDb;
+		final Project result = collection.find().first();
+		return result;
+	}
 
+	public long getCountProject()
+	{
+		final MongoDatabase database = this.mongoClient.getDatabase("projectDb");
+		final MongoCollection<Project> collection = database.getCollection("projects", Project.class);
+
+		final long result = collection.countDocuments();
+		return result;
 	}
 
 }
