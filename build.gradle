@@ -26,7 +26,10 @@ dependencies {
 }
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform {
+		includeTags 'embedded-container' 
+        excludeTags 'external-container'
+	}
     testLogging {
     	showStandardStreams = true
     }
